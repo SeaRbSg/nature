@@ -1,5 +1,5 @@
 require 'graphics.rb'
-require_relative './helpers/rainbows'
+require_relative '../helpers/rainbows'
 
 class Ball < Graphics::Body
 
@@ -9,8 +9,7 @@ class Ball < Graphics::Body
 
   def initialize w
     super
-    self.r = 2 + rand(7)
-    self.m = 5 + rand(9)
+    self.m = self.r = 2 + rand(9)
     self.a = rand 360.0
     self.c = "cubehelix_#{160 + rand(200)}".to_sym
     self.polyp = w.polyp
