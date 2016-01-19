@@ -53,9 +53,6 @@ class Ball < Graphics::Body
           w.circle o.x, o.y, o.r, o.c, :true
           w.circle o.x, o.y, o.r, :gray
         end
-
-      else
-        w.circle o.x, o.y, o.r, o.c, :fill
       end
     end
   end
