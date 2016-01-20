@@ -25,6 +25,10 @@ class Ball < Graphics::Body
     bounce
   end
 
+  def touches? b
+    (x-b.x).abs < 10 && (y-b.y).abs < 10
+  end
+
   class View
     def self.draw w, b
       color = b.stuck? ? :white : :gray
@@ -57,7 +61,7 @@ class DLASimulation < Graphics::Simulation
 
   def handle_collisions
     bs.combination(2).each do |a, b|
-      if (a.stuck? || b.stuck?) && (a.x-b.x).abs < 10 && (a.y-b.y).abs < 10 then
+      if (a.stuck? || b.stuck?) && a.touches?(b) then
         a.stuck = true
         b.stuck = true
       end
