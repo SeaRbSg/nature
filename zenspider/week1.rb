@@ -60,10 +60,13 @@ class DLASimulation < Graphics::Simulation
   end
 
   def handle_collisions
-    bs.combination(2).each do |a, b|
-      if (a.stuck? || b.stuck?) && a.touches?(b) then
-        a.stuck = true
-        b.stuck = true
+    dead, alive = bs.partition(&:stuck?)
+
+    alive.each do |a|
+      dead.each do |b|
+        if a.touches? b then
+          a.stuck = true
+        end
       end
     end
   end
