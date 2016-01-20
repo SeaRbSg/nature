@@ -35,13 +35,6 @@ class Ball < Graphics::Body
   end
 end
 
-module ShowFPS
-  def draw n
-    super
-    fps n
-  end
-end
-
 class DLASimulation < Graphics::Simulation
   attr_accessor :bs
 
