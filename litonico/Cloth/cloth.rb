@@ -5,8 +5,8 @@ WINSIZE = 500
 PARTICLE_RADIUS = 5
 EDGE_LEN = 50
 GRAVITY = -0.1
-WIDTH = 5
-HEIGHT = 5
+WIDTH = 7
+HEIGHT = 7
 
 class Constraint
   attr_reader :a, :b
@@ -110,6 +110,7 @@ class Cloth
     end
 
     particles[0] = Pin.new particles[0].pos
+    particles[WIDTH-1] = Pin.new particles[WIDTH-1].pos
 
     # Link particles horizontally
     HEIGHT.times do |y|
@@ -129,6 +130,10 @@ class Cloth
     # Constrain the top-left particle
     constraints[0] = LeftPinConstraint.new(particles[0], particles[1])
     constraints[(WIDTH-1)*HEIGHT] = LeftPinConstraint.new(particles[0], particles[WIDTH])
+
+    # Constrain the top-right particle
+    constraints[WIDTH-2] = LeftPinConstraint.new(particles[WIDTH-1], particles[WIDTH-2])
+    constraints[(WIDTH-1)*HEIGHT+(WIDTH-1)] = LeftPinConstraint.new(particles[WIDTH-1], particles[WIDTH*2-1])
   end
 
   def update
