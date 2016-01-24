@@ -6,31 +6,23 @@ class Vec2
   end
 
   def + other
-    Vec2.new @x+other.x, @y+other.y
+    Vec2.new x + other.x, y + other.y
   end
 
   def - other
-    Vec2.new @x-other.x, @y-other.y
+    Vec2.new x - other.x, y - other.y
   end
 
   def scale s
-    Vec2.new @x*s, @y*s
-  end
-
-  def * s
-    Vec2.new @x*s, @y*s
-  end
-
-  def / s
-    Vec2.new @x/s, @y/s
+    Vec2.new x*s,  y*s
   end
 
   def == other
-    @x == other.x && @y == other.y
+    x == other.x && y == other.y
   end
 
   def magnitude_squared
-    @x**2 + @y**2
+    x**2 + y**2
   end
 
   def magnitude
@@ -42,7 +34,7 @@ class Vec2
     if m == 0
       Vec2.new 0, 0
     else
-      Vec2.new @x.to_f/m, @y.to_f/m
+      Vec2.new x.to_f/m, y.to_f/m
     end
   end
 
@@ -75,7 +67,7 @@ class Vec2
   end
 
   def map &block
-    Vec2.new block.call(self.x), block.call(self.y)
+    Vec2.new block.call(x), block.call(y)
   end
 end
 

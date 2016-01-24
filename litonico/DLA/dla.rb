@@ -64,13 +64,13 @@ class DLA
 
   def drifting_particle_at_edges
     # Round each random position to start at a wall
-    position = Vec2.random_positive.map(&:round) * WINSIZE
-    velocity = Vec2.random * 5
+    position = Vec2.random_positive.map(&:round).scale WINSIZE
+    velocity = Vec2.random.scale 5
     Particle.new(position, velocity)
   end
 
   def drifting_particle
-    position = Vec2.random_positive * WINSIZE
+    position = Vec2.random_positive.scale WINSIZE
     # Drifting from top-right to bottom-left
     velocity = Vec2.random + Vec2.new(-2,-2)
     Particle.new(position, velocity)
