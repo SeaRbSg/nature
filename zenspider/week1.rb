@@ -52,7 +52,9 @@ class DLASimulation < Graphics::Simulation
     self.bs = populate Ball
     register_bodies bs
 
-    bs.first.stuck = true
+    bs.sample.stuck = true
+    bs.sample.stuck = true
+    bs.sample.stuck = true
   end
 
   def update n
