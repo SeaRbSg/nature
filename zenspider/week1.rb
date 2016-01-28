@@ -25,6 +25,7 @@ class Ball < Graphics::Body
     return if stuck?
     move
     bounce 0.0
+    turn random_turn 20 if rand(10) == 0
   end
 
   def touches? b
