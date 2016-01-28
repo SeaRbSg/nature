@@ -7,6 +7,8 @@ require "graphics"
 class Ball < Graphics::Body
   COUNT = 1000
   R = 2
+  D = 1
+  R2 = R*R + D
 
   attr_accessor :stuck
   alias stuck? stuck
@@ -14,19 +16,19 @@ class Ball < Graphics::Body
   def initialize w
     super
 
-    self.a = random_angle / 2
-    self.m = 1 + rand(10)
+    self.a = random_angle
+    self.m = R2
     self.stuck = false
   end
 
   def update
     return if stuck?
     move
-    bounce
+    bounce 0.0
   end
 
   def touches? b
-    (x-b.x).abs < 10 && (y-b.y).abs < 10
+    (x-b.x).abs < R2 && (y-b.y).abs < R2
   end
 
   class View
