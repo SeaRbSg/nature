@@ -44,10 +44,24 @@ end
 class DLASimulation < Graphics::Simulation
   attr_accessor :bs
 
+  WIDTH      = 800
+  PART_SIDE  = 50
+  PARTITIONS = PART_SIDE * PART_SIDE
+  PART_WIDTH = WIDTH / PART_SIDE
+
+  n = WIDTH / PART_SIDE.to_f
+  if n.to_i != n then
+    abort "WIDTH and PARTITIONS aren't compatible: %.2f" % n
+  end
+
+  GRID_WIDTH = PART_WIDTH
+  include DrawGrid
   include ShowFPS
 
+  attr_accessor :partitions
+
   def initialize
-    super 640, 640, 16, "Bounce"
+    super WIDTH, WIDTH, 16, "Coral"
 
     self.bs = populate Ball
     register_bodies bs
@@ -55,6 +69,8 @@ class DLASimulation < Graphics::Simulation
     bs.sample.stuck = true
     bs.sample.stuck = true
     bs.sample.stuck = true
+
+    self.partitions = Array.new(PARTITIONS) do [] end
   end
 
   def update n
@@ -64,14 +80,53 @@ class DLASimulation < Graphics::Simulation
   end
 
   def handle_collisions
-    dead, alive = bs.partition(&:stuck?)
+    partition_into bs, partitions
+    interesting = partitions.find_all { |p| p.any?(&:stuck?) && !p.none?(&:stuck?) }
 
-    alive.each do |a|
-      dead.each do |b|
-        if a.touches? b then
-          a.stuck = true
+    interesting.each do |subgroup|
+      dead, alive = subgroup.partition(&:stuck?)
+
+      next if dead.empty? or alive.empty?
+
+      alive.each do |a|
+        dead.each do |b|
+          if a.touches? b then
+            a.stuck = true
+          end
         end
       end
+    end
+  end
+
+  def scale b
+    x = b.x.to_i
+    y = b.y.to_i
+    x = WIDTH-1 if x >= WIDTH
+    y = WIDTH-1 if y >= WIDTH
+    x = 0 if x < 0
+    y = 0 if y < 0
+
+    [x / PART_WIDTH, y / PART_WIDTH]
+  end
+
+  def partition b
+    x, y = scale b
+    x + PART_SIDE * y
+  end
+
+  def partition_into from, to, size=PARTITIONS, side=PART_WIDTH
+    to.each(&:clear)
+
+    from.each do |b|
+      idx = partition b
+
+      raise "BAD: #{b.x} x #{b.y} => #{idx}" if idx >= size
+
+      to[idx]           << b
+      to[idx+1]         << b if idx+1 < size
+      to[idx-1]         << b if idx-1 >= 0
+      to[idx-PART_SIDE] << b if idx-PART_SIDE >= 0
+      to[idx+PART_SIDE] << b if idx+PART_SIDE < size
     end
   end
 end
