@@ -2,6 +2,7 @@
 
 $: << File.expand_path("~/Work/git/zenspider/graphics/lib")
 
+require "set"
 require "graphics"
 
 class Ball < Graphics::Body
@@ -12,6 +13,7 @@ class Ball < Graphics::Body
 
   attr_accessor :stuck
   alias stuck? stuck
+  alias color stuck
 
   def initialize w
     super
@@ -34,7 +36,8 @@ class Ball < Graphics::Body
 
   class View
     def self.draw w, b
-      color = b.stuck? ? :white : :gray
+      return unless b.stuck?
+      color = b.stuck? ? w.colors[w.coral.size - b.color] : :gray
 
       w.angle  b.x, b.y, b.a, Ball::R2+b.m, :red unless b.stuck?
       w.circle b.x, b.y, Ball::R, color, :filled
@@ -49,6 +52,7 @@ class DLASimulation < Graphics::Simulation
   PART_SIDE  = 50
   PARTITIONS = PART_SIDE * PART_SIDE
   PART_WIDTH = WIDTH / PART_SIDE
+  COLOR      = "cyan"
   START_COUNT = 3
 
   n = WIDTH / PART_SIDE.to_f
@@ -56,11 +60,10 @@ class DLASimulation < Graphics::Simulation
     abort "WIDTH and PARTITIONS aren't compatible: %.2f" % n
   end
 
-  GRID_WIDTH = PART_WIDTH
-  include DrawGrid
   include ShowFPS
 
   attr_accessor :partitions
+  attr_accessor :colors, :coral
 
   def initialize
     super WIDTH, WIDTH, 16, "Coral"
@@ -71,6 +74,12 @@ class DLASimulation < Graphics::Simulation
     START_COUNT.times do |n|
       bs.sample.stuck = n
     end
+
+    self.coral = bs.find_all(&:stuck?).to_set
+    self.colors = (0...Ball::COUNT).map { |n|
+      n = (255.0 * n / Ball::COUNT).to_i
+      ("%s%03d" % [COLOR, n]).to_sym
+    }.reverse
 
     self.partitions = Array.new(PARTITIONS) do [] end
   end
@@ -93,7 +102,8 @@ class DLASimulation < Graphics::Simulation
       alive.each do |a|
         dead.each do |b|
           if a.touches? b then
-            a.stuck = true
+            a.stuck = coral.size
+            coral << a
           end
         end
       end
