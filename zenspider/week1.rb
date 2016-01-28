@@ -49,6 +49,7 @@ class DLASimulation < Graphics::Simulation
   PART_SIDE  = 50
   PARTITIONS = PART_SIDE * PART_SIDE
   PART_WIDTH = WIDTH / PART_SIDE
+  START_COUNT = 3
 
   n = WIDTH / PART_SIDE.to_f
   if n.to_i != n then
@@ -67,9 +68,9 @@ class DLASimulation < Graphics::Simulation
     self.bs = populate Ball
     register_bodies bs
 
-    bs.sample.stuck = true
-    bs.sample.stuck = true
-    bs.sample.stuck = true
+    START_COUNT.times do |n|
+      bs.sample.stuck = n
+    end
 
     self.partitions = Array.new(PARTITIONS) do [] end
   end
