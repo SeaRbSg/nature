@@ -74,4 +74,11 @@ class DLASimulation < Graphics::Simulation
   end
 end
 
-DLASimulation.new.run
+if ARGV.empty? then
+  DLASimulation.new.run
+else
+  require "stackprof"
+  StackProf.run(mode: :cpu, out: "#{Dir.pwd}/stackprof.dump") do
+    DLASimulation.new.run
+  end
+end
