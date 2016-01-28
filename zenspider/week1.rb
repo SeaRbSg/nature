@@ -6,7 +6,7 @@ require "set"
 require "graphics"
 
 class Ball < Graphics::Body
-  COUNT = 1000
+  COUNT = 10_000
   R = 2
   D = 1
   R2 = R*R + D
