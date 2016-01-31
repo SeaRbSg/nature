@@ -56,17 +56,17 @@ class LeftPinConstraint
 end
 
 
-class Particle < Graphics::Body
+class Particle
   attr_accessor :position, :prev_position, :acceleration
 
-  def initialize pos=ORIGIN, prev_pos=ORIGIN, acc=ORIGIN
-    @prev_position = prev_pos
+  def initialize pos=ORIGIN, acc=ORIGIN
     @position = pos
+    @prev_position = pos
     @acceleration = acc
   end
 
   def move
-    self.velocity = position - prev_position + acceleration
+    velocity = position - prev_position + acceleration
     self.prev_position = position
     self.position = position + velocity
     self.acceleration = Vec2.new 0, 0
@@ -106,7 +106,7 @@ class Cloth
 
     HEIGHT.times do |y|
       WIDTH.times do |x|
-        p = Particle.new(ORIGIN + Vec2.new(x*50+50, 400-y*50))
+        p = Particle.new(ORIGIN + Vec2.new(x*50+50, 450-y*50))
         particles << p
       end
     end
@@ -132,8 +132,6 @@ class Cloth
     # Constrain the top-left particle
     constraints[0] = LeftPinConstraint.new(particles[0], particles[1])
     constraints[(WIDTH-1)*HEIGHT] = LeftPinConstraint.new(particles[0], particles[WIDTH])
-    # TODO(Lito)
-    # constraints[1] = LeftPinConstraint.new(particles[1], particles[2])
 
     # Constrain the top-right particle
     constraints[WIDTH-2] = LeftPinConstraint.new(particles[WIDTH-1], particles[WIDTH-2])
