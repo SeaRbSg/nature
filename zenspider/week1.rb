@@ -37,7 +37,7 @@ class Ball < Graphics::Body
   class View
     def self.draw w, b
       return unless b.stuck?
-      color = b.stuck? ? w.colors[w.coral.size - b.color] : :gray
+      color = b.stuck? ? w.colors[w.coral.size - b.color - 1] : :gray
 
       w.angle  b.x, b.y, b.a, Ball::R2+b.m, :red unless b.stuck?
       w.circle b.x, b.y, Ball::R, color, :filled
